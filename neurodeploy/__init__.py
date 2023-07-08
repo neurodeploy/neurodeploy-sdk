@@ -112,3 +112,28 @@ def deploy(
     # remove model and preprocessing function files
     os.remove(filepath)
     os.remove(preprocessing_path)
+
+
+# TODO
+def list_models() -> list[dict]:
+    return []
+
+
+# TODO
+def list_credentials() -> list[dict]:
+    return []
+
+
+# TODO
+def list_api_keys() -> list[dict]:
+    return []
+
+
+# TODO
+def create_credential() -> list[dict]:
+    return []
+
+
+# TODO
+def create_api_key() -> list[dict]:
+    return []
