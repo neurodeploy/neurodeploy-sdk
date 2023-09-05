@@ -4,24 +4,14 @@ from collections.abc import Callable
 import inspect
 import requests
 
-DEV = "playingwithml"
-PROD = "neurodeploy"
-DOMAIN_NAME = PROD
-
+DOMAIN_NAME = "playingwithml"
 
 null_function = lambda: None
 creds: dict = {}
 
 
-def set_dev():
-    DOMAIN_NAME = DEV
-
-
-def set_prod():
-    DOMAIN_NAME = PROD
-
-
 def login(username: str = "") -> dict:
+    global creds
     from getpass import getpass
 
     _username = username if username else input("Username: ")
@@ -86,7 +76,7 @@ def deploy(
     lib: str = "tensorflow",
     filetype: str = "h5",
     is_public: bool = False,
-    token: str = get_token(),
+    token: str = "",
 ):
     """
     Deploy an ML model.
@@ -118,6 +108,8 @@ def deploy(
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
     # model: : tf.keras.models.Sequential
 
     # save model and preprocessing if exists
@@ -153,7 +145,7 @@ def deploy(
     os.remove(preprocessing_path)
 
 
-def list_models(token: str = get_token()) -> list[dict]:
+def list_models(token: str = "") -> list[dict]:
     """
     List all models.
 
@@ -162,6 +154,9 @@ def list_models(token: str = get_token()) -> list[dict]:
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
+
     http_response = requests.get(
         url=f"https://user-api.{DOMAIN_NAME}.com/ml-models",
         headers={"Authorization": f"Bearer {token}"},
@@ -170,7 +165,7 @@ def list_models(token: str = get_token()) -> list[dict]:
     return x.get("models", [])
 
 
-def list_credentials(token: str = get_token()) -> list[dict]:
+def list_credentials(token: str = "") -> list[dict]:
     """
     List all valid credentials.
 
@@ -179,6 +174,9 @@ def list_credentials(token: str = get_token()) -> list[dict]:
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
+
     http_response = requests.get(
         url=f"https://user-api.{DOMAIN_NAME}.com/credentials",
         headers={"Authorization": f"Bearer {token}"},
@@ -187,7 +185,7 @@ def list_credentials(token: str = get_token()) -> list[dict]:
     return x.get("creds", [])
 
 
-def list_api_keys(model_name: str = "", token: str = get_token()) -> list[dict]:
+def list_api_keys(model_name: str = "", token: str = "") -> list[dict]:
     """
     List API keys.
 
@@ -200,6 +198,9 @@ def list_api_keys(model_name: str = "", token: str = get_token()) -> list[dict]:
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
+
     http_response = requests.get(
         url=f"https://user-api.{DOMAIN_NAME}.com/api-keys",
         params={"model_name": model_name} if model_name else {},
@@ -212,7 +213,7 @@ def list_api_keys(model_name: str = "", token: str = get_token()) -> list[dict]:
 def create_credential(
     name: str,
     description: str,
-    token: str = get_token(),
+    token: str = "",
 ) -> dict:
     """
     Create a new credential (access token).
@@ -228,6 +229,9 @@ def create_credential(
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
+
     http_response = requests.post(
         url=f"https://user-api.{DOMAIN_NAME}.com/credentials",
         headers={
@@ -243,7 +247,7 @@ def create_api_key(
     model_name: str = "",
     description: str = "",
     expires_after: int = 0,
-    token: str = get_token(),
+    token: str = "",
 ) -> dict:
     """
     Create a new API key.
@@ -264,6 +268,9 @@ def create_api_key(
         If this function is called without either first logging in or providing a valid `access_key`,
         an exception will be raised.
     """
+    if not token:
+        token = get_token()
+
     params = {}
     if model_name:
         params["model_name"] = model_name
