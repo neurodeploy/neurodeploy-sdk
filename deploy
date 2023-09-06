@@ -2,7 +2,7 @@
 
 TWINE_USERNAME=__token__
 TWINE_PASSWORD=$(<.token)
-echo $TWINE_PASSWORD
+
 rm -rf dist
 python -m build
 python -m twine upload \
