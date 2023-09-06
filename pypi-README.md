@@ -1,1 +1,1 @@
-# playingwithml SDK
+# neurodeploy SDK

@@ -4,13 +4,13 @@ from collections.abc import Callable
 import inspect
 import requests
 
-DOMAIN_NAME = "playingwithml"
+DOMAIN_NAME = "neurodeploy"
 
 null_function = lambda: None
 creds: dict = {}
 
 
-def login(username: str = "") -> dict:
+def login(username: str = ""):
     global creds
     from getpass import getpass
 
@@ -21,8 +21,12 @@ def login(username: str = "") -> dict:
         headers={"username": _username, "password": password},
     )
 
-    creds = response.json()
-    return creds
+    tmp = response.json()
+    if all(["token" in tmp, "expiration" in tmp, "error_message" not in tmp]):
+        creds = tmp
+        print("Successfully logged in")
+    else:
+        print("Failed to logged in")
 
 
 def get_token() -> str:

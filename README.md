@@ -2,7 +2,7 @@
 
 ## Branches
 
-- playingwithml -- playingwithml
+- neurodeploy -- neurodeploy
 - neurodeploy -- neurodeploy
 
 ## Installing dependencies
