@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from collections.abc import Callable
 import inspect
 import requests
@@ -142,7 +143,38 @@ def deploy(
 
     # remove model and preprocessing function files
     os.remove(filepath)
-    os.remove(preprocessing_path)
+    if x["preprocessing"]:
+        os.remove(preprocessing_path)
+
+
+def predict(
+    username: str,
+    name: str,
+    payload: dict,
+    api_key: str = "",
+) -> requests.Response:
+    """
+    Make a prediction using the deployed inference endpoint.
+
+    username: str
+        Name of the user whose account contains the model.
+
+    name: str
+        Name of the ML model to make inference with.
+
+    payload: dict
+        A dict of the input to be passed to the inference endpoint
+
+    api_key: str (optional)
+        If the inference endpoint is public, then this field is not used.
+        If the inference endpoint is private, then this is the `api key`
+        that provides access to the model
+    """
+    return requests.post(
+        url=f"https://api.{DOMAIN_NAME}.com/{username}/{name}",
+        headers={"api-key": api_key} if api_key else None,
+        data=json.dumps(payload),
+    )
 
 
 def list_models(token: str = "") -> list[dict]:
