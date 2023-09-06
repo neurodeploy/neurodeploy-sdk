@@ -150,7 +150,7 @@ def deploy(
 def predict(
     username: str,
     name: str,
-    payload: dict,
+    payload: list,
     api_key: str = "",
 ) -> requests.Response:
     """
@@ -162,8 +162,8 @@ def predict(
     name: str
         Name of the ML model to make inference with.
 
-    payload: dict
-        A dict of the input to be passed to the inference endpoint
+    payload: list
+        The input to be passed to the inference endpoint as a list.
 
     api_key: str (optional)
         If the inference endpoint is public, then this field is not used.
